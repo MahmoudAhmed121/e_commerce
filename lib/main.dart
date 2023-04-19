@@ -1,5 +1,6 @@
 
 import 'package:e_commerce/ui/Home.dart';
+import 'package:e_commerce/ui/bottom_bar.dart';
 import 'package:e_commerce/ui/login.dart';
 import 'package:e_commerce/ui/register_form.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,12 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "home",
+      initialRoute: "regis",
       routes: {
         "Login": (context) => Login(),
         "regis": (context) => Regis(),
-        "home":(context) => Home()
-      
+        "home":(context) => Home(),
+      "bottomBar":(context) => CustomBottomNavBar(),
       },
     );
   }
