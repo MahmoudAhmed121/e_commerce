@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -9,7 +11,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   bool obscureText = true;
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,7 @@ class _LoginState extends State<Login> {
                 ),
                 Container(
                   child: TextFormField(
-                    
+                    controller: emailController,
                     validator: (text) {
                       if (text!.length < 8) {
                         return "Oops! Your Email Is Not Correct ";
@@ -79,6 +82,7 @@ class _LoginState extends State<Login> {
                 ),
                 Container(
                   child: TextFormField(
+                    controller: passwordController,
                     obscureText: obscureText,
                     validator: (text) {
                       if (text!.length < 6 && text.isEmpty) {
@@ -120,7 +124,7 @@ class _LoginState extends State<Login> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_globalKey.currentState!.validate()) {
-                        Navigator.pushReplacementNamed(context, "bottomBar");
+                        login();
                       }
                     },
                     child: Text(
@@ -245,5 +249,32 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+ Future login() async {
+    try {
+      final response =
+          await Dio().post("https://api.escuelajs.co/api/v1/auth/login", data: {
+        "email": emailController.text,
+        "password": passwordController.text,
+      });
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("welcome")));
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final accessToken =
+          await prefs.setString("access_token", response.data["access_token"]);
+      Navigator.pushReplacementNamed(context, "bottomBar");
+      print(response.data["access_token"]);
+
+      return response;
+    } on DioError catch (e) {
+      if (e.response!.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("you dont have account ${e.response!.data["message"]}")));
+      }
+    }
   }
 }

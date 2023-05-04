@@ -1,13 +1,19 @@
+class CategoryModel {
+  int id;
+  String name;
+  String image;
 
-class DameData {
+  CategoryModel({
+    required this.id,
+    required this.name,
+    required this.image,
+  });
 
- 
-  DameData(
-    this.photo, this.title
-  );
-
-  String photo;
-  String title;
-
-
+  factory CategoryModel.fromJson({required json}) {
+    return CategoryModel(
+      id: json["id"],
+      name: json["name"],
+      image: json["image"],
+    );
+  }
 }

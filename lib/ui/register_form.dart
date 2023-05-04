@@ -182,7 +182,6 @@ class _RegisState extends State<Regis> {
                                 if (Forms.currentState!.validate()) {
                                   if (Passwordone.text == PasswordTwo.text) {
                                     regis();
-                                    Navigator.pushNamed(context, "Login");
                                   }
                                 }
                               },
@@ -226,7 +225,7 @@ class _RegisState extends State<Regis> {
     );
   }
 
-  regis() async {
+ Future regis() async {
     try {
       final data =
           await Dio().post("https://api.escuelajs.co/api/v1/users/", data: {
@@ -235,7 +234,7 @@ class _RegisState extends State<Regis> {
         "password": Passwordone.text,
         "avatar": "https://api.lorem.space/image/face?w=640&h=480"
       });
-
+      Navigator.pushNamed(context, "Login");
       return data;
     } on DioError catch (e) {
       if (e.response!.statusCode == 400) {

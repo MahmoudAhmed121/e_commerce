@@ -1,17 +1,9 @@
 import 'package:e_commerce/ui/model/categorry.dart';
+import 'package:e_commerce/ui/repo/category_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class Home extends StatelessWidget {
-  List<DameData> categore = [
-    DameData("images/shirt.png", "Man Shirt"),
-    DameData("images/dress.png", "Dress"),
-    DameData("images/man bag.png", "Man Work"),
-    DameData("images/woman bag.png", "Woman Bag"),
-    DameData("images/man shoes.png", "Man Shoes"),
-    DameData("images/man shoes.png", "Man Shoes"),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,39 +86,52 @@ class Home extends StatelessWidget {
                     ],
                   ),
 
-                  Container(
-                    margin: EdgeInsets.only(left: 12, right: 12),
-                    height: 100,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: categore.length,
-                      itemBuilder: (context, index) {
+                  FutureBuilder<List<CategoryModel>>(
+                    future: CategoryRepo().getData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
+                      var data = snapshot.data;
+                      if (snapshot.connectionState == ConnectionState.done) {
                         return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5),
-                          child: Column(
-                            children: [
-                              InkWell(
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 35,
-                                  child: Image.asset(categore[index].photo),
+                          margin: EdgeInsets.only(left: 12, right: 12),
+                          height: 100,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: data!.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: [
+                                    InkWell(
+                                      child: CircleAvatar(
+                                        radius: 40,
+                                        backgroundImage:
+                                            NetworkImage(data[index].image),
+                                      ),
+                                      onTap: () {},
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      data[index].name,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 10),
+                                    ),
+                                  ],
                                 ),
-                                onTap: () {},
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                categore[index].title,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 10),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         );
-                      },
-                    ),
+                      }else{
+                       return SizedBox();
+                      }
+                    },
                   ),
                   // list of icon
 

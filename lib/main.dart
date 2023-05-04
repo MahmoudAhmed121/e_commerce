@@ -3,6 +3,7 @@ import 'package:e_commerce/ui/Home.dart';
 import 'package:e_commerce/ui/bottom_bar.dart';
 import 'package:e_commerce/ui/login.dart';
 import 'package:e_commerce/ui/register_form.dart';
+import 'package:e_commerce/ui/splach.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,12 +17,13 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "regis",
+      initialRoute: "splach",
       routes: {
         "Login": (context) => Login(),
         "regis": (context) => Regis(),
         "home":(context) => Home(),
       "bottomBar":(context) => CustomBottomNavBar(),
+      "splach":(context) => Splach(),
       },
     );
   }
